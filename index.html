@@ -1,479 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="or">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="MR SIDHU DIGITAL STUDIO - Photo, PDF, ID card and digital printing tools in one place.">
-  <title>MR SIDHU DIGITAL STUDIO | Digital Printing & Online Tools</title>
-  <style>
-    :root {
-      --yellow: #ffd500;
-      --yellow-dark: #e7bd00;
-      --ink: #111111;
-      --ink-2: #1c1c1c;
-      --paper: #ffffff;
-      --muted: #777777;
-      --line: #e9e9e9;
-      --soft: #fffbea;
-      --radius: 18px;
-      --shadow: 0 14px 40px rgba(0,0,0,.08);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      color: var(--ink);
-      background: #fff;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
-    }
-    a { color: inherit; text-decoration: none; }
-    button, input { font: inherit; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
-    .topbar { background: var(--yellow); color: #171717; font-size: 13px; font-weight: 700; }
-    .topbar-inner { min-height: 34px; display:flex; align-items:center; justify-content:center; text-align:center; }
-    .header {
-      position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.96);
-      backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
-    }
-    .nav { min-height: 78px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
-    .brand { display:flex; align-items:center; gap:11px; min-width:0; }
-    .brand-mark {
-      width: 43px; height:43px; display:grid; place-items:center; border-radius:13px;
-      background:var(--yellow); color:#111; font-weight:1000; font-size:19px; letter-spacing:-1px;
-      box-shadow: 4px 4px 0 #111;
-    }
-    .brand-name { font-size:15px; font-weight:950; letter-spacing:.5px; line-height:1.15; }
-    .brand-name span { display:block; color:#777; font-size:10px; letter-spacing:2px; margin-top:5px; }
-    .nav-links { display:flex; align-items:center; gap:25px; font-size:13px; font-weight:750; }
-    .nav-links a { transition:color .2s; }
-    .nav-links a:hover { color:#b38f00; }
-    .nav-actions { display:flex; align-items:center; gap:9px; }
-    .btn {
-      border:0; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:12px 17px; border-radius:11px; font-weight:850; font-size:13px; transition:.2s;
-    }
-    .btn:hover { transform:translateY(-2px); }
-    .btn-dark { background:var(--ink); color:white; }
-    .btn-yellow { background:var(--yellow); color:#111; box-shadow:0 5px 0 #d3b000; }
-    .btn-outline { border:1px solid #d9d9d9; background:white; color:#111; }
-    .menu-toggle { display:none; border:1px solid var(--line); background:#fff; border-radius:10px; padding:9px 12px; font-size:20px; }
-    .hero { background:var(--ink); color:white; overflow:hidden; position:relative; }
-    .hero:before {
-      content:""; position:absolute; width:440px; height:440px; border-radius:50%;
-      background:rgba(255,213,0,.10); right:-120px; top:-210px;
-    }
-    .hero-grid { position:relative; display:grid; grid-template-columns:1.12fr .88fr; gap:45px; align-items:center; padding:78px 0 82px; }
-    .eyebrow { display:inline-flex; gap:8px; align-items:center; background:rgba(255,213,0,.12); color:var(--yellow); border:1px solid rgba(255,213,0,.35); padding:7px 12px; border-radius:30px; font-size:11px; font-weight:900; letter-spacing:1.3px; text-transform:uppercase; }
-    .hero h1 { margin:20px 0 15px; font-size:clamp(37px,5.4vw,66px); line-height:1.04; letter-spacing:-2.7px; max-width:700px; }
-    .hero h1 span { color:var(--yellow); }
-    .hero-copy { max-width:570px; color:#c8c8c8; font-size:16px; margin:0 0 27px; }
-    .hero-buttons { display:flex; gap:12px; flex-wrap:wrap; }
-    .hero .btn-outline { background:transparent; border-color:#555; color:white; }
-    .hero-note { margin-top:25px; color:#a7a7a7; font-size:12px; }
-    .hero-note strong { color:white; }
-    .showcase {
-      background:#202020; border:1px solid #3a3a3a; padding:19px; border-radius:24px;
-      box-shadow:0 28px 70px rgba(0,0,0,.35); transform:rotate(1deg);
-    }
-    .showcase-top { display:flex; justify-content:space-between; align-items:center; padding:2px 2px 16px; color:#aaa; font-size:11px; font-weight:800; }
-    .live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#74d78a; margin-right:6px; }
-    .preview-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .preview-tile { min-height:118px; border-radius:15px; padding:15px; display:flex; flex-direction:column; justify-content:space-between; color:#111; }
-    .preview-tile:nth-child(1) { background:var(--yellow); }
-    .preview-tile:nth-child(2) { background:#fff; }
-    .preview-tile:nth-child(3) { background:#f1f1f1; }
-    .preview-tile:nth-child(4) { background:#383838; color:#fff; }
-    .preview-icon { font-size:27px; }
-    .preview-tile b { font-size:13px; }
-    .preview-tile small { font-size:10px; opacity:.7; }
-    .stats { background:var(--yellow); }
-    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); padding:19px 0; gap:15px; text-align:center; }
-    .stat strong { display:block; font-size:18px; font-weight:950; }
-    .stat span { display:block; font-size:11px; font-weight:750; opacity:.72; }
-    section { scroll-margin-top:95px; }
-    .section { padding:76px 0; }
-    .section-soft { background:#fafafa; }
-    .section-head { display:flex; align-items:end; justify-content:space-between; gap:25px; margin-bottom:29px; }
-    .kicker { color:#a18400; font-size:11px; font-weight:950; letter-spacing:1.7px; text-transform:uppercase; }
-    h2 { margin:7px 0 0; font-size:clamp(27px,3.5vw,39px); letter-spacing:-1.2px; line-height:1.15; }
-    .section-desc { color:var(--muted); max-width:510px; font-size:14px; margin:10px 0 0; }
-    .search-wrap { width:min(340px,100%); position:relative; }
-    .search-wrap input {
-      width:100%; border:1px solid #dedede; border-radius:12px; padding:13px 15px 13px 42px;
-      outline:none; background:white;
-    }
-    .search-wrap input:focus { border-color:#c5a000; box-shadow:0 0 0 3px rgba(255,213,0,.16); }
-    .search-icon { position:absolute; left:15px; top:11px; font-size:17px; color:#888; }
-    .tool-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; }
-    .tool-card {
-      border:1px solid var(--line); border-radius:16px; padding:19px; background:white;
-      transition:.22s; min-height:184px; display:flex; flex-direction:column; align-items:flex-start;
-    }
-    .tool-card:hover { transform:translateY(-5px); border-color:#e5c000; box-shadow:var(--shadow); }
-    .tool-icon { width:45px; height:45px; display:grid; place-items:center; border-radius:13px; background:var(--soft); font-size:23px; margin-bottom:15px; }
-    .tool-card h3 { margin:0 0 5px; font-size:15px; }
-    .tool-card p { margin:0; color:#777; font-size:12px; line-height:1.5; }
-    .tool-link { margin-top:auto; padding-top:13px; font-size:11px; font-weight:900; color:#9a7b00; }
-    .tool-link span { font-size:15px; }
-    .empty-state { display:none; padding:30px; text-align:center; color:#777; border:1px dashed #ddd; border-radius:14px; margin-top:15px; }
-    .category-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }
-    .category-card { border-radius:18px; padding:25px; background:#fff; border:1px solid var(--line); }
-    .category-card.dark { background:#151515; color:white; border-color:#151515; }
-    .category-card.yellow { background:var(--yellow); border-color:var(--yellow); }
-    .category-card .big-icon { font-size:30px; }
-    .category-card h3 { margin:12px 0 7px; font-size:19px; }
-    .category-card p { margin:0; font-size:13px; color:#777; }
-    .category-card.dark p { color:#bbb; }
-    .category-card ul { padding-left:18px; margin:14px 0 0; font-size:12px; line-height:1.9; }
-    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-    .step { padding:22px; border:1px solid var(--line); border-radius:16px; }
-    .step-no { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; background:var(--yellow); font-weight:950; }
-    .step h3 { font-size:16px; margin:14px 0 5px; }
-    .step p { font-size:13px; color:#777; margin:0; }
-    .cta { background:var(--yellow); padding:42px; border-radius:22px; display:flex; align-items:center; justify-content:space-between; gap:25px; }
-    .cta h2 { font-size:clamp(25px,3vw,34px); }
-    .cta p { margin:8px 0 0; font-size:13px; color:#514500; }
-    .faq-list { max-width:820px; margin:0 auto; }
-    details { border-bottom:1px solid var(--line); padding:17px 0; }
-    summary { cursor:pointer; font-weight:850; font-size:14px; }
-    details p { color:#777; font-size:13px; margin:10px 0 0; }
-    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
-    .contact-panel { background:#171717; color:white; padding:30px; border-radius:18px; }
-    .contact-panel p { color:#bbb; font-size:13px; }
-    .contact-item { margin-top:18px; font-size:13px; }
-    .contact-form { padding:28px; border:1px solid var(--line); border-radius:18px; }
-    .contact-form label { display:block; font-size:12px; font-weight:800; margin:13px 0 6px; }
-    .contact-form input { width:100%; border:1px solid #ddd; border-radius:10px; padding:12px; outline:none; }
-    .contact-form input:focus { border-color:#c5a000; }
-    .footer { background:#101010; color:white; padding:40px 0 20px; }
-    .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:35px; }
-    .footer p, .footer a { color:#aaa; font-size:12px; }
-    .footer h4 { margin:0 0 12px; font-size:13px; }
-    .footer-links { display:grid; gap:8px; }
-    .copyright { border-top:1px solid #303030; margin-top:30px; padding-top:17px; color:#777; font-size:11px; text-align:center; }
-    .toast {
-      position:fixed; z-index:100; bottom:20px; left:50%; transform:translate(-50%,20px);
-      opacity:0; pointer-events:none; background:#171717; color:#fff; border:1px solid #444;
-      padding:12px 17px; border-radius:12px; font-size:12px; box-shadow:var(--shadow); transition:.25s;
-      width:max-content; max-width:calc(100% - 30px); text-align:center;
-    }
-    .toast.show { opacity:1; transform:translate(-50%,0); }
-    @media (max-width: 950px) {
-      .nav-links { gap:14px; }
-      .tool-grid { grid-template-columns:repeat(3,1fr); }
-      .hero-grid { gap:25px; }
-    }
-    @media (max-width: 760px) {
-      .container { width:min(100% - 30px, 560px); }
-      .nav { min-height:68px; }
-      .menu-toggle { display:block; }
-      .nav-actions .btn-outline { display:none; }
-      .nav-links {
-        display:none; position:absolute; top:68px; left:0; right:0; padding:18px 22px 22px;
-        background:white; border-bottom:1px solid var(--line); box-shadow:0 12px 20px rgba(0,0,0,.06);
-        flex-direction:column; align-items:stretch; gap:0;
-      }
-      .nav-links.open { display:flex; }
-      .nav-links a { padding:11px 0; border-bottom:1px solid #f1f1f1; }
-      .hero-grid { grid-template-columns:1fr; padding:58px 0; }
-      .showcase { max-width:500px; width:100%; margin:0 auto; }
-      .stats-grid { grid-template-columns:repeat(2,1fr); row-gap:18px; }
-      .section { padding:58px 0; }
-      .section-head { display:block; }
-      .search-wrap { margin-top:20px; width:100%; }
-      .tool-grid { grid-template-columns:repeat(2,1fr); }
-      .category-grid { grid-template-columns:1fr; }
-      .steps { grid-template-columns:1fr; }
-      .cta { padding:27px; align-items:flex-start; flex-direction:column; }
-      .contact-grid { grid-template-columns:1fr; }
-      .footer-grid { grid-template-columns:1fr 1fr; }
-      .footer-grid > div:first-child { grid-column:1/-1; }
-    }
-    @media (max-width: 420px) {
-      .brand-name { font-size:12px; }
-      .brand-mark { width:39px; height:39px; }
-      .nav-actions .btn { padding:10px 11px; font-size:11px; }
-      .hero h1 { letter-spacing:-1.7px; }
-      .tool-grid { gap:10px; }
-      .tool-card { padding:14px; min-height:175px; }
-      .tool-card h3 { font-size:13px; }
-      .tool-card p { font-size:11px; }
-      .footer-grid { grid-template-columns:1fr; }
-      .footer-grid > div:first-child { grid-column:auto; }
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>MR SIDHU DIGITAL STUDIO | Online Tools</title>
+<style>
+:root{--y:#ffd500;--ink:#111;--paper:#fff;--muted:#666;--line:#e8e8e8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--ink);line-height:1.5}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:800;background:var(--y);color:#111}
+a{color:inherit;text-decoration:none}.container{width:min(1160px,calc(100% - 30px));margin:auto}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+nav{min-height:70px;display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{font-weight:950}.brand span{display:block;font-size:10px;letter-spacing:2px;color:#777}
+nav a{margin-left:18px;font-size:13px;font-weight:750}
+.hero{background:#111;color:white;padding:58px 0}.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.05;margin:12px 0}.hero h1 span{color:var(--y)}.hero p{color:#ccc;max-width:620px}
+section{padding:48px 0;scroll-margin-top:75px}.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.tool{border:1px solid var(--line);border-radius:15px;padding:18px;background:#fff;text-align:left;min-height:145px}.tool:hover{border-color:#d0ae00;box-shadow:0 8px 25px #00000012}.tool b{display:block;margin:8px 0}.tool small{color:#666}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:15px 0}.toolbar input,.toolbar select,.field input,.field textarea,.field select{padding:10px;border:1px solid #ccc;border-radius:9px;max-width:100%;width:100%}
+#search{max-width:350px}.panel{display:none;border:1px solid #ddd;border-radius:16px;padding:20px;margin-top:20px;background:#fff;box-shadow:0 10px 30px #0000000c}.panel.active{display:block}.panel h3{margin-top:0}.field{margin:12px 0;max-width:600px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:5px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}.secondary{background:#eee}.danger{background:#ffe0e0}.preview{max-width:100%;max-height:420px;display:block;margin:14px 0;border:1px solid #ddd;border-radius:8px}.hint{font-size:13px;color:#666}.status{padding:10px;background:#fff8d7;border-radius:9px;margin:12px 0;font-size:13px;white-space:pre-wrap}
+canvas{max-width:100%;height:auto;border:1px solid #ddd}.output{margin-top:15px}.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+footer{background:#111;color:white;padding:30px 0;text-align:center}
+@media(max-width:650px){nav{align-items:flex-start;padding:12px 0;flex-direction:column}nav a{margin:0 14px 0 0}.hero{padding:42px 0}section{padding:35px 0}}
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="container topbar-inner">ONE PLACE FOR PHOTO • PDF • DOCUMENT • PRINTING TOOLS</div>
-  </div>
-
-  <header class="header">
-    <div class="container nav">
-      <a class="brand" href="#home" aria-label="MR SIDHU DIGITAL STUDIO home">
-        <div class="brand-mark">MS</div>
-        <div class="brand-name">MR SIDHU <span>DIGITAL STUDIO</span></div>
-      </a>
-
-      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
-        <a href="#home">Home</a>
-        <a href="#tools">Online Tools</a>
-        <a href="#services">Services</a>
-        <a href="#how">How It Works</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <div class="nav-actions">
-        <button class="btn btn-outline" type="button" data-demo="Customer login">Login</button>
-        <button class="btn btn-yellow" type="button" data-demo="Customer registration">Get Started</button>
-        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="home">
-      <div class="container hero-grid">
-        <div>
-          <div class="eyebrow">✦ Smart digital studio</div>
-          <h1>All Your Digital<br><span>Work, One Place.</span></h1>
-          <p class="hero-copy">Create passport photos, prepare documents, manage PDF files and explore digital printing services with a simple, modern experience.</p>
-          <div class="hero-buttons">
-            <a class="btn btn-yellow" href="#tools">Explore Online Tools <span>→</span></a>
-            <a class="btn btn-outline" href="#services">Our Services</a>
-          </div>
-          <div class="hero-note">Simple tools. Clean results. <strong>Designed for everyone.</strong></div>
-        </div>
-        <div class="showcase" aria-label="Preview of studio tools">
-          <div class="showcase-top"><span>✦ STUDIO WORKSPACE</span><span><i class="live-dot"></i>READY TO EXPLORE</span></div>
-          <div class="preview-grid">
-            <div class="preview-tile"><span class="preview-icon">📸</span><div><b>Photo Studio</b><br><small>Crop • Resize • Print</small></div></div>
-            <div class="preview-tile"><span class="preview-icon">📄</span><div><b>PDF Studio</b><br><small>Convert • Merge • Split</small></div></div>
-            <div class="preview-tile"><span class="preview-icon">🪪</span><div><b>ID Card Maker</b><br><small>Cards • Layouts</small></div></div>
-            <div class="preview-tile"><span class="preview-icon">🖨️</span><div><b>Print Services</b><br><small>Digital • Document</small></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="stats">
-      <div class="container stats-grid">
-        <div class="stat"><strong>PHOTO</strong><span>EDITING TOOLS</span></div>
-        <div class="stat"><strong>PDF</strong><span>DOCUMENT TOOLS</span></div>
-        <div class="stat"><strong>ID CARDS</strong><span>DESIGN TOOLS</span></div>
-        <div class="stat"><strong>PRINT</strong><span>STUDIO SERVICES</span></div>
-      </div>
-    </div>
-
-    <section class="section" id="tools">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <div class="kicker">Explore the workspace</div>
-            <h2>Popular Online Tools</h2>
-            <p class="section-desc">Choose a tool to get started. More tools can be added as the studio grows.</p>
-          </div>
-          <div class="search-wrap">
-            <span class="search-icon">⌕</span>
-            <input id="toolSearch" type="search" placeholder="Search tools..." aria-label="Search online tools">
-          </div>
-        </div>
-
-        <div class="tool-grid" id="toolGrid">
-          <a class="tool-card" href="#contact" data-name="passport photo maker">
-            <div class="tool-icon">📸</div><h3>Passport Photo Maker</h3><p>Prepare passport-size photo layouts.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="photo resize crop">
-            <div class="tool-icon">✂️</div><h3>Photo Crop & Resize</h3><p>Adjust image dimensions for documents.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="background remover">
-            <div class="tool-icon">🪄</div><h3>Background Remover</h3><p>Prepare clean photo backgrounds.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="a4 photo sheet 4x6">
-            <div class="tool-icon">🖨️</div><h3>A4 Photo Sheet</h3><p>Arrange multiple photos for printing.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="jpg to pdf image converter">
-            <div class="tool-icon">🗂️</div><h3>JPG to PDF</h3><p>Turn image files into PDF documents.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="pdf merge combine">
-            <div class="tool-icon">📚</div><h3>PDF Merger</h3><p>Combine documents into one PDF.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="pdf split pages">
-            <div class="tool-icon">📑</div><h3>PDF Splitter</h3><p>Separate pages from a PDF file.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="pdf to jpg converter">
-            <div class="tool-icon">🖼️</div><h3>PDF to JPG</h3><p>Convert PDF pages into images.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="id card pvc card maker">
-            <div class="tool-icon">🪪</div><h3>ID & PVC Card Maker</h3><p>Create printable card layouts.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="resume cv maker">
-            <div class="tool-icon">📝</div><h3>Resume / CV Maker</h3><p>Build a clean professional resume.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="marriage biodata maker">
-            <div class="tool-icon">📋</div><h3>Marriage Biodata</h3><p>Prepare a neat biodata document.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-          <a class="tool-card" href="#contact" data-name="poster banner visiting card design">
-            <div class="tool-icon">🎨</div><h3>Design Studio</h3><p>Plan posters, banners and visiting cards.</p><div class="tool-link">Explore tool <span>→</span></div>
-          </a>
-        </div>
-        <div class="empty-state" id="emptyState">No matching tools found. Try another search.</div>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="services">
-      <div class="container">
-        <div class="section-head">
-          <div><div class="kicker">What we offer</div><h2>Digital Studio Services</h2><p class="section-desc">A simple service hub for everyday photo, document and printing needs.</p></div>
-        </div>
-        <div class="category-grid">
-          <article class="category-card">
-            <div class="big-icon">📷</div><h3>Photo Services</h3><p>Photo preparation and print-ready layouts.</p>
-            <ul><li>Passport-size photo layout</li><li>Photo resize and crop</li><li>4×6 and A4 photo sheet</li></ul>
-          </article>
-          <article class="category-card dark">
-            <div class="big-icon">📃</div><h3>Document Services</h3><p>Useful document preparation tools.</p>
-            <ul><li>PDF conversion and merging</li><li>Resume and biodata formats</li><li>Document layout preparation</li></ul>
-          </article>
-          <article class="category-card yellow">
-            <div class="big-icon">🖨️</div><h3>Printing & Design</h3><p>Creative layouts for personal and business use.</p>
-            <ul><li>ID and PVC card layouts</li><li>Poster and banner design</li><li>Visiting card design</li></ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="how">
-      <div class="container">
-        <div class="section-head"><div><div class="kicker">Easy to use</div><h2>How It Works</h2><p class="section-desc">A clear path from choosing a service to preparing your work.</p></div></div>
-        <div class="steps">
-          <article class="step"><div class="step-no">01</div><h3>Choose a Tool</h3><p>Find the photo, PDF, document or design tool you need.</p></article>
-          <article class="step"><div class="step-no">02</div><h3>Prepare Your File</h3><p>Use the selected tool to prepare your image or document.</p></article>
-          <article class="step"><div class="step-no">03</div><h3>Print or Save</h3><p>Review your result, then save it or request a print service.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-soft">
-      <div class="container">
-        <div class="cta">
-          <div><div class="kicker">Your digital workspace</div><h2>Make everyday digital work simpler.</h2><p>Explore the tools and services available at MR SIDHU DIGITAL STUDIO.</p></div>
-          <a class="btn btn-dark" href="#tools">Explore Tools →</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="section-head"><div><div class="kicker">Need to know</div><h2>Frequently Asked Questions</h2></div></div>
-        <div class="faq-list">
-          <details><summary>Are all online tools working right now?</summary><p>This first release is the homepage interface. Individual photo, PDF and document tools will be connected in the next development stages.</p></details>
-          <details><summary>Can I use this website on mobile and computer?</summary><p>Yes. The homepage layout is responsive and adapts to mobile phones, tablets and desktop screens.</p></details>
-          <details><summary>Can customers create an account?</summary><p>Customer registration and login are planned for the next stage. They are not connected in this frontend-only version.</p></details>
-          <details><summary>Can I place a print order online?</summary><p>Online order submission, payment and order tracking will be added after the customer and admin modules are built.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="contact">
-      <div class="container">
-        <div class="section-head"><div><div class="kicker">Get in touch</div><h2>Contact the Studio</h2><p class="section-desc">Add your official business contact details before publishing this website.</p></div></div>
-        <div class="contact-grid">
-          <div class="contact-panel">
-            <div class="eyebrow">MR SIDHU DIGITAL STUDIO</div>
-            <h2>Let's get your work ready.</h2>
-            <p>For printing, photo, document and design enquiries, contact the studio using your official details.</p>
-            <div class="contact-item">📍 <strong>Address:</strong> Add your shop address</div>
-            <div class="contact-item">📞 <strong>Phone:</strong> Add your business phone number</div>
-            <div class="contact-item">✉️ <strong>Email:</strong> Add your business email</div>
-          </div>
-          <form class="contact-form" id="contactForm">
-            <h3 style="margin:0">Quick Enquiry</h3>
-            <p style="margin:5px 0;color:#777;font-size:12px">This demo form shows a confirmation on this device only.</p>
-            <label for="customerName">Your Name</label><input id="customerName" name="name" required placeholder="Enter your name">
-            <label for="customerPhone">Mobile Number</label><input id="customerPhone" name="phone" inputmode="tel" required pattern="[0-9+\-\s]{8,16}" placeholder="Enter mobile number">
-            <label for="customerMessage">Service Required</label><input id="customerMessage" name="message" required placeholder="e.g. Passport photo, PDF print">
-            <button class="btn btn-yellow" style="margin-top:18px;width:100%" type="submit">Send Enquiry →</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div><a class="brand" href="#home"><div class="brand-mark">MS</div><div class="brand-name">MR SIDHU <span>DIGITAL STUDIO</span></div></a><p style="max-width:330px;margin-top:18px">A modern digital workspace for photo, PDF, document and printing services.</p></div>
-        <div><h4>Quick Links</h4><div class="footer-links"><a href="#home">Home</a><a href="#tools">Online Tools</a><a href="#services">Services</a><a href="#contact">Contact</a></div></div>
-        <div><h4>Tool Categories</h4><div class="footer-links"><a href="#tools">Photo Tools</a><a href="#tools">PDF Tools</a><a href="#tools">ID Card Maker</a><a href="#tools">Document Tools</a></div></div>
-      </div>
-      <div class="copyright">© <span id="year"></span> MR SIDHU DIGITAL STUDIO. All rights reserved.</div>
-    </div>
-  </footer>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script>
-    // Mobile navigation
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
-    menuToggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('open');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.textContent = isOpen ? '✕' : '☰';
-    });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.textContent = '☰';
-      });
-    });
-
-    // Search/filter cards
-    const searchInput = document.getElementById('toolSearch');
-    const toolCards = [...document.querySelectorAll('.tool-card')];
-    const emptyState = document.getElementById('emptyState');
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.trim().toLowerCase();
-      let visible = 0;
-      toolCards.forEach(card => {
-        const matches = (card.dataset.name + ' ' + card.innerText).toLowerCase().includes(query);
-        card.style.display = matches ? 'flex' : 'none';
-        if (matches) visible++;
-      });
-      emptyState.style.display = visible ? 'none' : 'block';
-    });
-
-    // Demo actions: real account features will be connected in a later phase
-    const toast = document.getElementById('toast');
-    let toastTimer;
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
-    }
-    document.querySelectorAll('[data-demo]').forEach(button => {
-      button.addEventListener('click', () => showToast(button.dataset.demo + ' will be available in the next development phase.'));
-    });
-    document.querySelectorAll('.tool-card').forEach(card => {
-      card.addEventListener('click', event => {
-        event.preventDefault();
-        showToast(card.querySelector('h3').textContent + ' will be connected in the next tools phase.');
-      });
-    });
-
-    // Frontend-only enquiry confirmation; no data is sent or stored
-    document.getElementById('contactForm').addEventListener('submit', event => {
-      event.preventDefault();
-      showToast('Thank you! This demo form is not connected to a server yet.');
-      event.target.reset();
-    });
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<header><div class="container"><nav><a class="brand" href="#home">MR SIDHU <span>DIGITAL STUDIO</span></a><div><a href="#tools">Online Tools</a><a href="#contact">Contact</a></div></nav></div></header>
+<main>
+<section class="hero" id="home"><div class="container"><b>тЬж SMART DIGITAL STUDIO</b><h1>All Your Digital<br><span>Work, One Place.</span></h1><p>рмлрмЯрнЛ, PDF, ID Card, Resume рмПрммрмВ Design рмХрм╛рмо рмкрм╛рмЗрмБ рм╕рм╣рмЬ Online Tools.</p><a href="#tools"><button>Tools рмЦрнЛрм▓рмирнНрмдрнБ тЖУ</button></a></div></section>
+<section id="tools"><div class="container"><h2>рм╕рморм╕рнНрмд Online Tools</h2><p class="hint">рмпрнЗрмЙрмБ Tool рмжрм░рмХрм╛рм░, рмдрм╛рм╣рм╛ рмЪрнЯрми рмХрм░рмирнНрмдрнБред рмлрм╛рмЗрм▓рнН рмЖрмкрмгрмЩрнНрмХ Browser рм░рнЗ рмкрнНрм░рмХрнНрм░рм┐рнЯрм╛ рм╣рнБрмП; Background Remover рмкрм╛рмЗрмБ рм╕рнБрм░рмХрнНрм╖рм┐рмд API backend рмжрм░рмХрм╛рм░ред</p>
+<div class="toolbar"><input id="search" placeholder="Tool рмЦрнЛрмЬрмирнНрмдрнБ..."></div>
+<div class="tools" id="toolGrid">
+<button class="tool" data-tool="passport">ЁЯУ╕ <b>Passport Photo Maker</b><small>Passport photo size рмПрммрмВ print layout</small></button>
+<button class="tool" data-tool="crop">тЬВя╕П <b>Photo Crop & Resize</b><small>Photo crop рмПрммрмВ dimensions рммрмжрм│рм╛рмирнНрмдрнБ</small></button>
+<button class="tool" data-tool="bg">ЁЯкД <b>AI Background Remover</b><small>AI рмжрнНрн▒рм╛рм░рм╛ background remove</small></button>
+<button class="tool" data-tool="sheet">ЁЯЦия╕П <b>A4 Photo Sheet</b><small>рмПрмХ рмкрнГрм╖рнНрмарм╛рм░рнЗ рмЕрмирнЗрмХ photo</small></button>
+<button class="tool" data-tool="jpgpdf">ЁЯЧВя╕П <b>JPG to PDF</b><small>Image рм░рнБ PDF</small></button>
+<button class="tool" data-tool="merge">ЁЯУЪ <b>PDF Merger</b><small>рмПрмХрм╛рмзрм┐рмХ PDF рмпрнЛрмбрм╝рмирнНрмдрнБ</small></button>
+<button class="tool" data-tool="split">ЁЯУС <b>PDF Splitter</b><small>рмЪрнЯрмирм┐рмд page рмЕрм▓рмЧрм╛ рмХрм░рмирнНрмдрнБ</small></button>
+<button class="tool" data-tool="pdfjpg">ЁЯЦ╝я╕П <b>PDF to JPG</b><small>PDF page рмХрнБ JPG рмХрм░рмирнНрмдрнБ</small></button>
+<button class="tool" data-tool="id">ЁЯкк <b>ID & PVC Card Maker</b><small>Print-ready ID card</small></button>
+<button class="tool" data-tool="resume">ЁЯУЭ <b>Resume / CV Maker</b><small>Resume PDF рмдрм┐рмЖрм░рм┐</small></button>
+<button class="tool" data-tool="biodata">ЁЯУЛ <b>Marriage Biodata</b><small>Biodata PDF рмдрм┐рмЖрм░рм┐</small></button>
+<button class="tool" data-tool="design">ЁЯОи <b>Design Studio</b><small>Poster / visiting card canvas</small></button>
+</div>
+<div class="panel" id="panel"><div class="toolbar" style="justify-content:space-between"><h3 id="panelTitle">Tool</h3><button class="secondary" id="close">рммрмирнНрмж рмХрм░рмирнНрмдрнБ тЬХ</button></div><div id="panelBody"></div><div id="status" class="status" role="status">Tool рмкрнНрм░рм╕рнНрмдрнБрмдред</div></div>
+</div></section>
+<section id="contact" style="background:#fafafa"><div class="container"><h2>MR SIDHU DIGITAL STUDIO</h2><p>Digital Photo тАв PDF тАв Document тАв Printing</p><p class="hint">рмПрм╣рм┐ demo website рм░рнЗ customer login, online payment рмПрммрмВ print order backend рмПрмпрм╛рммрмдрнН рмпрнЛрмбрм╝рм╛рмпрм╛рмЗрмирм╛рм╣рм┐рмБред</p></div></section>
+</main><footer>┬й <span id="year"></span> MR SIDHU DIGITAL STUDIO</footer>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=s=>document.querySelector(s), panel=$('#panel'), body=$('#panelBody'), status=$('#status');
+$('#year').textContent=new Date().getFullYear();
+const toolNames={passport:'Passport Photo Maker',crop:'Photo Crop & Resize',bg:'AI Background Remover',sheet:'A4 Photo Sheet',jpgpdf:'JPG to PDF',merge:'PDF Merger',split:'PDF Splitter',pdfjpg:'PDF to JPG',id:'ID & PVC Card Maker',resume:'Resume / CV Maker',biodata:'Marriage Biodata',design:'Design Studio'};
+function msg(t){status.textContent=t}
+function fileInput(id,multiple=false,accept='image/*'){return `<div class="field"><label>рмлрм╛рмЗрм▓рнН рмЪрнЯрми рмХрм░рмирнНрмдрнБ</label><input id="${id}" type="file" accept="${accept}" ${multiple?'multiple':''}></div>`}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function loadImage(file){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=URL.createObjectURL(file)})}
+function canvasBlob(canvas,type='image/jpeg',quality=.92){return new Promise(r=>canvas.toBlob(r,type,quality))}
+function imageCanvas(im,w,h,fit='cover'){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');let scale=fit==='contain'?Math.min(w/im.width,h/im.height):Math.max(w/im.width,h/im.height);let sw=im.width*scale,sh=im.height*scale;x.drawImage(im,(w-sw)/2,(h-sh)/2,sw,sh);return c}
+function openTool(key){panel.classList.add('active');$('#panelTitle').textContent=toolNames[key];body.innerHTML='';msg('рмлрм╛рмЗрм▓рнН рмЖрмкрмгрмЩрнНрмХ device рм░рнЗ рмкрнНрм░рмХрнНрм░рм┐рнЯрм╛ рм╣рнЗрммред');const run=actions=>body.innerHTML=actions;
+if(key==='crop'||key==='passport'||key==='sheet'){
+run(fileInput('img')+`<div class="grid2"><div class="field"><label>Width (px)</label><input id="w" type="number" value="${key==='passport'?413:key==='sheet'?1200:800}"></div><div class="field"><label>Height (px)</label><input id="h" type="number" value="${key==='passport'?531:key==='sheet'?1700:800}"></div></div><div class="field"><label>Background colour</label><input id="bgc" type="color" value="#ffffff"></div><div class="actions"><button id="process">Preview / рмкрнНрм░рм╕рнНрмдрнБрмд рмХрм░рмирнНрмдрнБ</button><button class="secondary" id="save" disabled>JPG Download</button><button class="secondary" id="print" disabled>Print</button></div><div id="out"></div>`);
+let result=null;$('#process').onclick=async()=>{try{const f=$('#img').files[0];if(!f)throw Error('рмкрнНрм░рмерморнЗ Photo рммрм╛рмЫрмирнНрмдрнБред');const im=await loadImage(f),w=Math.max(1,+$('#w').value),h=Math.max(1,+$('#h').value),c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle=$('#bgc').value;x.fillRect(0,0,w,h);if(key==='sheet'){const cellW=Math.round(w/4),cellH=Math.round(h/5);for(let y=0;y<5;y++)for(let z=0;z<4;z++){const tile=imageCanvas(im,cellW-12,cellH-12);x.drawImage(tile,z*cellW+6,y*cellH+6)}}else{const tile=imageCanvas(im,w,h);x.drawImage(tile,0,0)}result=c;$('#out').innerHTML='';const p=document.createElement('img');p.className='preview';p.src=c.toDataURL();$('#out').append(p);$('#save').disabled=$('#print').disabled=false;msg('Preview рмкрнНрм░рм╕рнНрмдрнБрмдред')}catch(e){msg(e.message)}};
+$('#save').onclick=async()=>downloadBlob(await canvasBlob(result),key==='passport'?'passport-photo.jpg':key==='sheet'?'a4-photo-sheet.jpg':'resized-photo.jpg');
+$('#print').onclick=()=>{const win=window.open('');if(!win){msg('Print рмкрм╛рмЗрмБ pop-up allow рмХрм░рмирнНрмдрнБред');return}win.document.write(`<img style="max-width:100%" src="${result.toDataURL()}"><script>window.onload=()=>window.print()<\/script>`);win.document.close()};
+}
+if(key==='bg'){
+run(fileInput('img')+`<p class="hint">AI Background Remover рмкрм╛рмЗрмБ secure backend endpoint рмЖрммрм╢рнНрнЯрмХред API key рмХрнБ browser рм░рнЗ рм░рмЦрм╛рмпрм╛рмП рмирм╛рм╣рм┐рмБред</p><div class="actions"><button id="process">AI Background Remove</button></div><div id="out"></div>`);
+$('#process').onclick=async()=>{const f=$('#img').files[0];if(!f){msg('Photo рммрм╛рмЫрмирнНрмдрнБред');return}try{msg('AI рмкрнНрм░рмХрнНрм░рм┐рнЯрм╛ рмЪрм╛рм▓рм┐рмЫрм┐...');const fd=new FormData();fd.append('image_file',f);const r=await fetch('/api/remove-background',{method:'POST',body:fd});if(!r.ok)throw Error('AI API backend рмПрмпрм╛рммрмдрнН deploy рм╣рнЛрмЗрмирм╛рм╣рм┐рмБ рмХрм┐рморнНрммрм╛ request рммрм┐рмлрм│ред');const blob=await r.blob();const url=URL.createObjectURL(blob);$('#out').innerHTML=`<img class="preview" src="${url}"><button id="save">Transparent PNG Download</button>`;$('#save').onclick=()=>downloadBlob(blob,'background-removed.png');msg('Background remove рм╕рмлрм│ред')}catch(e){msg(e.message+' Cloudflare Worker/API backend deploy рмХрм░рм┐рммрм╛ рмкрм░рнЗ рмПрм╣рм╛ рмХрм╛рмо рмХрм░рм┐рммред')}};
+}
+if(key==='jpgpdf'){
+run(fileInput('imgs',true)+`<button id="process">PDF рмдрм┐рмЖрм░рм┐ рмХрм░рмирнНрмдрнБ</button>`);
+$('#process').onclick=async()=>{try{const fs=[...$('#imgs').files];if(!fs.length)throw Error('Image рммрм╛рмЫрмирнНрмдрнБред');const {PDFDocument}=PDFLib,pdf=await PDFDocument.create();for(const f of fs){const bytes=await f.arrayBuffer();let im;if(f.type==='image/png')im=await pdf.embedPng(bytes);else im=await pdf.embedJpg(bytes);const page=pdf.addPage([595,842]);const scale=Math.min(555/im.width,802/im.height);page.drawImage(im,{x:(595-im.width*scale)/2,y:(842-im.height*scale)/2,width:im.width*scale,height:im.height*scale})}downloadBlob(new Blob([await pdf.save()],{type:'application/pdf'}),'images.pdf');msg('PDF Download рмЖрм░рморнНрмн рм╣рнЗрм▓рм╛ред')}catch(e){msg(e.message)}};
+}
+if(key==='merge'){
+run(fileInput('pdfs',true,'.pdf,application/pdf')+`<button id="process">PDF Merge рмХрм░рмирнНрмдрнБ</button>`);
+$('#process').onclick=async()=>{try{const fs=[...$('#pdfs').files];if(fs.length<2)throw Error('рмЕрмдрм┐ рмХрморм░рнЗ 2рмЯрм┐ PDF рммрм╛рмЫрмирнНрмдрнБред');const out=await PDFLib.PDFDocument.create();for(const f of fs){const src=await PDFLib.PDFDocument.load(await f.arrayBuffer());const pages=await out.copyPages(src,src.getPageIndices());pages.forEach(p=>out.addPage(p))}downloadBlob(new Blob([await out.save()],{type:'application/pdf'}),'merged.pdf');msg('PDF merge рм╕рмлрм│ред')}catch(e){msg('PDF рмЦрнЛрм▓рм┐рм╣рнЗрм▓рм╛ рмирм╛рм╣рм┐рмБ: '+e.message)}};
+}
+if(key==='split'){
+run(fileInput('pdf',false,'.pdf,application/pdf')+`<div class="field"><label>Page number (рмЙрмжрм╛рм╣рм░рмг: 1,3,5-7)</label><input id="pages" placeholder="1,3,5-7"></div><button id="process">Selected Pages PDF Download</button>`);
+$('#process').onclick=async()=>{try{const f=$('#pdf').files[0];if(!f)throw Error('PDF рммрм╛рмЫрмирнНрмдрнБред');const src=await PDFLib.PDFDocument.load(await f.arrayBuffer()),ids=[];$('#pages').value.split(',').forEach(part=>{let [a,b]=part.trim().split('-').map(Number);if(!a)return;if(!b)b=a;for(let n=a;n<=b;n++)if(n>=1&&n<=src.getPageCount())ids.push(n-1)});if(!ids.length)throw Error('рмарм┐рмХрнН page number рмжрм┐рмЕрмирнНрмдрнБред');const out=await PDFLib.PDFDocument.create(),pages=await out.copyPages(src,ids);pages.forEach(p=>out.addPage(p));downloadBlob(new Blob([await out.save()],{type:'application/pdf'}),'split-pages.pdf');msg('Selected pages download рм╣рнЗрм▓рм╛ред')}catch(e){msg(e.message)}};
+}
+if(key==='pdfjpg'){
+run(fileInput('pdf',false,'.pdf,application/pdf')+`<div class="field"><label>Page number</label><input id="pg" type="number" value="1" min="1"></div><button id="process">Page рмХрнБ JPG рмХрм░рмирнНрмдрнБ</button><div id="out"></div>`);
+$('#process').onclick=async()=>{try{const f=$('#pdf').files[0];if(!f)throw Error('PDF рммрм╛рмЫрмирнНрмдрнБред');const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,n=+$('#pg').value;if(n<1||n>doc.numPages)throw Error('Page number PDF рм░рнЗ рмирм╛рм╣рм┐рмБред');const page=await doc.getPage(n),vp=page.getViewport({scale:1.7}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;$('#out').innerHTML='';const im=document.createElement('img');im.className='preview';im.src=c.toDataURL('image/jpeg');$('#out').append(im);const b=await canvasBlob(c);const d=document.createElement('button');d.textContent='JPG Download';d.onclick=()=>downloadBlob(b,`page-${n}.jpg`);$('#out').append(d);msg(`PDF рм░рнЗ ${doc.numPages}рмЯрм┐ page рмЕрмЫрм┐ред`)}catch(e){msg(e.message)}};
+}
+if(key==='id'){
+run(`<div class="grid2"><div class="field"><label>рмирм╛рмо</label><input id="nm" placeholder="Full Name"></div><div class="field"><label>ID / Roll No.</label><input id="roll" placeholder="ID Number"></div><div class="field"><label>рмкрмжрммрнА / Class</label><input id="role" placeholder="Student / Staff"></div><div class="field"><label>Photo</label><input id="photo" type="file" accept="image/*"></div></div><button id="process">Card Preview</button><button id="save" class="secondary">PNG Download</button><div id="out"></div>`);
+const draw=async()=>{const c=document.createElement('canvas');c.width=1011;c.height=638;const x=c.getContext('2d');x.fillStyle='#ffd500';x.fillRect(0,0,c.width,125);x.fillStyle='#111';x.font='bold 48px Arial';x.fillText('MR SIDHU DIGITAL STUDIO',35,80);x.fillStyle='#fff';x.fillRect(0,125,c.width,513);x.strokeStyle='#111';x.lineWidth=8;x.strokeRect(10,135,991,493);x.fillStyle='#111';x.font='bold 46px Arial';x.fillText($('#nm').value||'YOUR NAME',330,260);x.font='32px Arial';x.fillText('ID: '+($('#roll').value||'тАФ'),330,340);x.fillText($('#role').value||'тАФ',330,410);const f=$('#photo').files[0];if(f){const im=await loadImage(f);x.drawImage(imageCanvas(im,230,290),55,205)}$('#out').innerHTML='';const im=document.createElement('img');im.className='preview';im.src=c.toDataURL();$('#out').append(im);window.idCanvas=c};$('#process').onclick=draw;$('#save').onclick=()=>window.idCanvas&&downloadBlob(canvasBlob(window.idCanvas,'image/png'),'id-card.png');
+}
+if(key==='resume'||key==='biodata'){
+const isR=key==='resume';run(`<div class="grid2"><div class="field"><label>рмкрнВрм░рм╛ рмирм╛рмо</label><input id="name" placeholder="Your Name"></div><div class="field"><label>Mobile</label><input id="phone" placeholder="Mobile Number"></div><div class="field"><label>Email</label><input id="email" placeholder="Email"></div><div class="field"><label>${isR?'Career Objective':'Date of Birth'}</label><input id="extra" placeholder="${isR?'Career objective':'DD/MM/YYYY'}"></div></div><div class="field"><label>${isR?'Education / Skills':'Family / Education / Occupation'}</label><textarea id="details" rows="5" placeholder="Details рм▓рнЗрмЦрмирнНрмдрнБ"></textarea></div><button id="process">Print / Save PDF</button><div id="out"></div>`);
+$('#process').onclick=()=>{const w=window.open('');if(!w){msg('Pop-up allow рмХрм░рмирнНрмдрнБред');return}const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));w.document.write(`<html><head><title>${isR?'Resume':'Marriage Biodata'}</title><style>body{font:16px Arial;padding:35px;color:#111}h1{border-bottom:3px solid #ffd500;padding-bottom:12px}pre{white-space:pre-wrap;font:15px Arial}</style></head><body><h1>${esc($('#name').value)}</h1><p>${esc($('#phone').value)} | ${esc($('#email').value)}</p><h3>${isR?'Objective':'Personal Details'}</h3><p>${esc($('#extra').value)}</p><h3>${isR?'Education & Skills':'Family / Education / Occupation'}</h3><pre>${esc($('#details').value)}</pre><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();msg('Print dialog рмЦрнЛрм▓рм╛рмпрм╛рмЗрмЫрм┐ред Save as PDF рммрм╛рмЫрмирнНрмдрнБред')};
+}
+if(key==='design'){
+run(`<div class="grid2"><div class="field"><label>Design Type</label><select id="dtype"><option>Poster</option><option>Visiting Card</option><option>Banner</option></select></div><div class="field"><label>Background</label><input id="color" type="color" value="#ffd500"></div></div><div class="field"><label>Main Text</label><input id="text" value="MR SIDHU DIGITAL STUDIO"></div><div class="field"><label>Sub Text</label><input id="sub" value="Digital Printing тАв Photo тАв PDF"></div><button id="process">Design Preview</button><button id="save" class="secondary">PNG Download</button><div id="out"></div>`);
+const draw=()=>{const c=document.createElement('canvas');c.width=1200;c.height=$('#dtype').value==='Visiting Card'?700:800;const x=c.getContext('2d');x.fillStyle=$('#color').value;x.fillRect(0,0,c.width,c.height);x.fillStyle='#111';x.textAlign='center';x.font='bold 66px Arial';x.fillText($('#text').value,600,360);x.font='34px Arial';x.fillText($('#sub').value,600,440);x.textAlign='left';$('#out').innerHTML='';const im=document.createElement('img');im.className='preview';im.src=c.toDataURL();$('#out').append(im);window.designCanvas=c};$('#process').onclick=draw;$('#save').onclick=()=>window.designCanvas&&downloadBlob(canvasBlob(window.designCanvas,'image/png'),'studio-design.png');
+}
+panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>openTool(b.dataset.tool)));
+$('#close').onclick=()=>panel.classList.remove('active');
+$('#search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.tool').forEach(b=>b.style.display=b.innerText.toLowerCase().includes(q)?'block':'none')});
+</script>
 </body>
 </html>
