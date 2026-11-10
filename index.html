@@ -113,6 +113,21 @@
     .photo-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
     .photo-actions button{flex:1;min-width:140px}
     .photo-help{font-size:11px;color:#777;margin-top:12px;line-height:1.5}
+
+    /* Photo Crop & Resize */
+    .resize-modal{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.78);overflow-y:auto;padding:16px 10px}
+    .resize-modal.active{display:block}
+    .resize-box{max-width:720px;margin:18px auto;background:#fff;border-radius:18px;padding:22px;box-shadow:0 20px 70px rgba(0,0,0,.3)}
+    .resize-box h2{font-size:25px;margin:0 0 8px}
+    .resize-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0}
+    .resize-controls label{font-size:12px;font-weight:800;min-width:0}
+    .resize-controls input,.resize-controls select{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid #ddd;border-radius:9px;background:#fff;min-width:0}
+    .resize-preview{background:#f4f4f4;padding:18px;border-radius:12px;text-align:center}
+    .resize-preview canvas{display:block;max-width:100%;max-height:340px;width:auto;height:auto;margin:0 auto;background:white;border:1px solid #ddd}
+    .resize-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .resize-actions button{flex:1;min-width:140px}
+    @media(max-width:420px){.resize-box{padding:15px}.resize-controls{grid-template-columns:1fr}}
+
     @media(max-width:950px){.nav-links{gap:14px}.tool-grid{grid-template-columns:repeat(3,1fr)}.hero-grid{gap:25px}}
     @media(max-width:760px){
       .container{width:min(100% - 30px,560px)}.nav{min-height:68px}.menu-toggle{display:block}
@@ -255,6 +270,37 @@
       <p class="photo-help">Note: This tool centre-crops the uploaded image and changes the canvas background colour; it does not automatically remove the original background. Check the photo rules of the organisation you are applying to before printing.</p>
     </div>
   </div>
+
+  <!-- Photo Crop & Resize modal -->
+  <div class="resize-modal" id="resizeModal" role="dialog" aria-modal="true" aria-labelledby="resizeTitle">
+    <div class="resize-box">
+      <button class="photo-close" id="closeResize" type="button" aria-label="Close Photo Crop and Resize">✕ Close</button>
+      <h2 id="resizeTitle">✂️ Photo Crop & Resize</h2>
+      <p class="photo-intro">Upload a photo, choose a preset or enter custom dimensions, then download your resized image.</p>
+      <div class="resize-controls">
+        <label>Upload Photo<input type="file" id="resizeUpload" accept="image/jpeg,image/png,image/webp"></label>
+        <label>Preset Size<select id="resizePreset">
+          <option value="original">Original dimensions</option>
+          <option value="passport">Passport ratio (35 × 45)</option>
+          <option value="square">Square (1:1)</option>
+          <option value="4x6">4 × 6 ratio</option>
+          <option value="custom">Custom dimensions</option>
+        </select></label>
+        <label>Width (pixels)<input type="number" id="resizeWidth" min="1" max="6000" value="800"></label>
+        <label>Height (pixels)<input type="number" id="resizeHeight" min="1" max="6000" value="800"></label>
+        <label>Fit Mode<select id="resizeFit"><option value="contain">Fit (no crop)</option><option value="cover">Fill (centre crop)</option><option value="stretch">Stretch</option></select></label>
+        <label>Output Format<select id="resizeFormat"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option></select></label>
+        <label>JPG Quality (only for JPG)<select id="resizeQuality"><option value="0.95">High</option><option value="0.85">Good</option><option value="0.70">Smaller file</option></select></label>
+      </div>
+      <div class="resize-preview"><h3 style="margin:0 0 12px">Preview</h3><canvas id="resizeCanvas" width="800" height="800"></canvas><p class="photo-status" id="resizeStatus" role="status">Please upload a photo.</p></div>
+      <div class="resize-actions">
+        <button class="btn btn-yellow" id="downloadResize" type="button">Download Image</button>
+        <button class="btn btn-dark" id="printResize" type="button">Print Image</button>
+      </div>
+      <p class="photo-help">Fit keeps the full image visible. Fill crops the centre to match the selected dimensions. Custom pixel dimensions are limited to 6000 × 6000.</p>
+    </div>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -464,6 +510,171 @@
       printWindow.document.close();
       passportStatus.textContent = 'Print sheet opened. In print settings choose A4 paper and 100% / Actual Size.';
     });
+
+
+    // Photo Crop & Resize
+    const resizeModal = document.getElementById('resizeModal');
+    const resizeCanvas = document.getElementById('resizeCanvas');
+    const resizeCtx = resizeCanvas.getContext('2d');
+    const resizeUpload = document.getElementById('resizeUpload');
+    const resizePreset = document.getElementById('resizePreset');
+    const resizeWidth = document.getElementById('resizeWidth');
+    const resizeHeight = document.getElementById('resizeHeight');
+    const resizeFit = document.getElementById('resizeFit');
+    const resizeFormat = document.getElementById('resizeFormat');
+    const resizeQuality = document.getElementById('resizeQuality');
+    const resizeStatus = document.getElementById('resizeStatus');
+    let resizeImage = null;
+    let resizeObjectUrl = null;
+
+    function openResize() {
+      resizeModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('closeResize').focus();
+    }
+    function closeResize() {
+      resizeModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('closeResize').addEventListener('click', closeResize);
+    resizeModal.addEventListener('click', e => { if (e.target === resizeModal) closeResize(); });
+
+    // Extend the tool-card click handler to launch the two working tools.
+    // The existing listener is replaced by a capture-phase handler that prevents its demo action.
+    toolCards.forEach(card => {
+      card.addEventListener('click', event => {
+        const name = card.dataset.name || '';
+        if (name.includes('passport') || name.includes('photo resize crop')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (name.includes('passport')) openPassport();
+          else openResize();
+        }
+      }, true);
+    });
+
+    function validResizeDimensions() {
+      const w = Number(resizeWidth.value);
+      const h = Number(resizeHeight.value);
+      return Number.isInteger(w) && Number.isInteger(h) && w >= 1 && h >= 1 && w <= 6000 && h <= 6000;
+    }
+    function renderResize() {
+      if (!resizeImage) return;
+      if (!validResizeDimensions()) {
+        resizeStatus.textContent = 'Enter width and height from 1 to 6000 pixels.';
+        return;
+      }
+      const w = Number(resizeWidth.value), h = Number(resizeHeight.value);
+      resizeCanvas.width = w;
+      resizeCanvas.height = h;
+      resizeCtx.fillStyle = '#ffffff';
+      resizeCtx.fillRect(0, 0, w, h);
+
+      if (resizeFit.value === 'stretch') {
+        resizeCtx.drawImage(resizeImage, 0, 0, w, h);
+      } else {
+        const sourceRatio = resizeImage.width / resizeImage.height;
+        const targetRatio = w / h;
+        let sx = 0, sy = 0, sw = resizeImage.width, sh = resizeImage.height;
+        if (resizeFit.value === 'cover') {
+          if (sourceRatio > targetRatio) {
+            sw = resizeImage.height * targetRatio;
+            sx = (resizeImage.width - sw) / 2;
+          } else {
+            sh = resizeImage.width / targetRatio;
+            sy = (resizeImage.height - sh) / 2;
+          }
+          resizeCtx.drawImage(resizeImage, sx, sy, sw, sh, 0, 0, w, h);
+        } else {
+          const scale = Math.min(w / resizeImage.width, h / resizeImage.height);
+          const dw = resizeImage.width * scale, dh = resizeImage.height * scale;
+          resizeCtx.drawImage(resizeImage, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        }
+      }
+      resizeStatus.textContent = `Preview ready: ${w} × ${h} pixels.`;
+    }
+
+    resizeUpload.addEventListener('change', e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+        resizeStatus.textContent = 'Please select a JPG, PNG or WebP image.';
+        resizeUpload.value = '';
+        return;
+      }
+      if (file.size > 20 * 1024 * 1024) {
+        resizeStatus.textContent = 'Maximum upload size is 20 MB.';
+        resizeUpload.value = '';
+        return;
+      }
+      if (resizeObjectUrl) URL.revokeObjectURL(resizeObjectUrl);
+      resizeObjectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        resizeImage = img;
+        resizePreset.value = 'original';
+        resizeWidth.value = img.naturalWidth;
+        resizeHeight.value = img.naturalHeight;
+        renderResize();
+      };
+      img.onerror = () => {
+        resizeImage = null;
+        resizeStatus.textContent = 'Could not read this image. Try another file.';
+        URL.revokeObjectURL(resizeObjectUrl);
+        resizeObjectUrl = null;
+      };
+      img.src = resizeObjectUrl;
+    });
+
+    resizePreset.addEventListener('change', () => {
+      if (!resizeImage) return;
+      const presets = {
+        original: [resizeImage.naturalWidth, resizeImage.naturalHeight],
+        passport: [413, 531],
+        square: [1000, 1000],
+        '4x6': [1200, 1800],
+        custom: [Number(resizeWidth.value) || 800, Number(resizeHeight.value) || 800]
+      };
+      [resizeWidth.value, resizeHeight.value] = presets[resizePreset.value];
+      renderResize();
+    });
+    [resizeWidth, resizeHeight, resizeFit].forEach(el => {
+      el.addEventListener('input', () => {
+        if (el === resizeWidth || el === resizeHeight) resizePreset.value = 'custom';
+        renderResize();
+      });
+      el.addEventListener('change', renderResize);
+    });
+
+    document.getElementById('downloadResize').addEventListener('click', () => {
+      if (!resizeImage) { resizeStatus.textContent = 'Please upload a photo first.'; return; }
+      if (!validResizeDimensions()) { renderResize(); return; }
+      const mime = resizeFormat.value;
+      resizeCanvas.toBlob(blob => {
+        if (!blob) { resizeStatus.textContent = 'Could not export image. Try again.'; return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `MR-SIDHU-Resized-Photo.${mime === 'image/png' ? 'png' : 'jpg'}`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        resizeStatus.textContent = 'Image download started.';
+      }, mime, Number(resizeQuality.value));
+    });
+
+    document.getElementById('printResize').addEventListener('click', () => {
+      if (!resizeImage) { resizeStatus.textContent = 'Please upload a photo first.'; return; }
+      if (!validResizeDimensions()) { renderResize(); return; }
+      const win = window.open('', '_blank');
+      if (!win) { resizeStatus.textContent = 'Allow pop-ups in your browser to print.'; return; }
+      const data = resizeCanvas.toDataURL('image/png');
+      win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Print Photo</title>
+        <style>@page{margin:10mm}body{margin:0;text-align:center}img{max-width:100%;max-height:95vh;object-fit:contain}</style>
+        </head><body><img src="${data}" alt="Resized photo"><script>window.onload=()=>window.print();<\/script></body></html>`);
+      win.document.close();
+      resizeStatus.textContent = 'Print window opened. Check paper and scale settings.';
+    });
+
 
     // Demo enquiry form only; no information is sent or stored.
     document.getElementById('contactForm').addEventListener('submit', event => {
